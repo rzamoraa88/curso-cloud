@@ -25,6 +25,7 @@ public class GestionarVuelosUseCase {
 		this.reservasVueloRepository = reservasVueloRepository;
 	}
 
+	// listarVuelosQuery
 	public Page<VueloAmpliadoDTO> listarVuelos(DocumentoIdentidad documentoIdentidadPasajero, int pagina, int tamanioPagina ) {
 		Page<Vuelo> vuelos = vuelosRepository.findVuelos( pagina, tamanioPagina );
 		Map<UUID, UUID> vuelosReserva = documentoIdentidadPasajero != null ? reservasVueloRepository.findReservasIdByVueloIdAndPasajero( documentoIdentidadPasajero, vuelos.map( Vuelo::getId ).getContent() ) : Collections.emptyMap();
@@ -32,6 +33,7 @@ public class GestionarVuelosUseCase {
 		return vuelos.map( v -> ApplicationMapper.vueloToDTO( v, vuelosReserva.get( v.getId() ) ) );
 	}
 
+	// obtenerVueloQuery
 	public VueloAmpliadoDTO obtenerVuelo( DocumentoIdentidad documentoIdentidadPasajero, UUID idVuelo ) {
 		Vuelo vuelo = vuelosRepository.findVuelo( idVuelo );
 		UUID vueloReserva = documentoIdentidadPasajero != null ? reservasVueloRepository.findReservaIdByVueloIdAndPasajero( documentoIdentidadPasajero, vuelo.getId() ) : null;

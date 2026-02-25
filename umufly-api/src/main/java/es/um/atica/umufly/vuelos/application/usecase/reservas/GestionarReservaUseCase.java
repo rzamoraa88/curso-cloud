@@ -31,6 +31,7 @@ public class GestionarReservaUseCase {
 		this.clock = clock;
 	}
 
+	// crearCommand
 	public ReservaVuelo creaReserva( DocumentoIdentidad documentoIdentidadTitular, UUID idVuelo, ClaseAsientoReserva claseAsiento, Pasajero pasajero ) {
 		// 1. Recuperar el vuelo
 		Vuelo vuelo = vuelosRepository.findVuelo( idVuelo );
@@ -53,6 +54,7 @@ public class GestionarReservaUseCase {
 		return reservaVuelo;
 	}
 
+	// cancelarCommand
 	public ReservaVuelo cancelarReserva( DocumentoIdentidad documentoIdentidadTitular, UUID idReserva ) {
 		// 1. Recuperamos la reserva
 		ReservaVuelo reservaVuelo = reservasVueloRepository.findReservaById( documentoIdentidadTitular, idReserva );
@@ -69,11 +71,13 @@ public class GestionarReservaUseCase {
 		return reservaVuelo;
 	}
 
+	// listarReservasQuery
 	public Page<ReservaVuelo> listarReservas( DocumentoIdentidad documentoIdentidad, int pagina, int tamanioPagina ) {
 		return reservasVueloRepository.findReservas( documentoIdentidad, pagina, tamanioPagina );
 
 	}
 
+	// obtenerReservaQuery
 	public ReservaVuelo obtenerReserva( DocumentoIdentidad documentoIdentidad, UUID idReserva ) {
 		return reservasVueloRepository.findReservaById( documentoIdentidad, idReserva );
 	}
