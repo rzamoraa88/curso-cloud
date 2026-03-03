@@ -32,7 +32,7 @@ public class CrearReservaCommandHandler implements SyncCommandHandler<ReservaVue
 	}
 
 	@Override
-	public ReservaVuelo handle( CrearReservaCommand command ) throws Exception {
+	public ReservaVuelo handle( CrearReservaCommand command ) {
 
 		// 1. Recuperar el vuelo
 		Vuelo vuelo = vuelosReadRepository.findVuelo( command.getIdVuelo() );

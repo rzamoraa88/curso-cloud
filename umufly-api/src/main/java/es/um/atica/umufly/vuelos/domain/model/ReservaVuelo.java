@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import es.um.atica.umufly.vuelos.domain.exception.LimiteReservasPorPasajeroEnVueloSuperadoException;
+import es.um.atica.umufly.vuelos.domain.exception.ReservaYaCanceladaException;
 import es.um.atica.umufly.vuelos.domain.exception.VueloIniciadoException;
 import es.um.atica.umufly.vuelos.domain.exception.VueloNoReservableException;
 import es.um.atica.umufly.vuelos.domain.exception.VueloSinPlazasException;
@@ -136,10 +137,13 @@ public class ReservaVuelo {
 	 *
 	 */
 	public void cancelarReserva( LocalDateTime now ) {
+		if (this.estado == EstadoReserva.CANCELADA) {
+			throw new ReservaYaCanceladaException("La reserva con id: " + this.getId().toString() + " ya está cancelada");
+		}
 		if ( now.isAfter( vuelo.getItinerario().salida() ) ) {
 			throw new VueloIniciadoException( "El vuelo se encuentra iniciado no se puede cancelar la reserva" );
 		}
-		estado = EstadoReserva.CANCELADA;
+		this.estado = EstadoReserva.CANCELADA;
 	}
 
 }

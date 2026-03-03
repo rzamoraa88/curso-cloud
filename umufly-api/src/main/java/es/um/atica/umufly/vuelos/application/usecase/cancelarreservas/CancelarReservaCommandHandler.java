@@ -28,7 +28,7 @@ public class CancelarReservaCommandHandler implements SyncCommandHandler<Reserva
 	}
 
 	@Override
-	public ReservaVuelo handle( CancelarReservaCommand command ) throws Exception {
+	public ReservaVuelo handle( CancelarReservaCommand command ) {
 		// 1. Recuperamos la reserva
 		ReservaVuelo reservaVuelo = reservasVueloReadRepository.findReservaById( command.getDocumentoIdentidadTitular(), command.getIdReserva() );
 
@@ -41,17 +41,6 @@ public class CancelarReservaCommandHandler implements SyncCommandHandler<Reserva
 		reservasVueloWritePort.cancelarReservaVuelo( command.getDocumentoIdentidadTitular(), idReservaFormalizada );
 
 		return reservaVuelo;
-		/*
-		 * // Idempotencia // 1. Recuperamos la reserva reservasVueloReadRepository.findReservaById(
-		 * command.getDocumentoIdentidadTitular(), command.getIdReserva() ).ifPresentOrElse( ( reservaVuelo ) -> { // CASO:
-		 * Existe la reserva // 2. Cancelamos la reserva en el dominio (FrontOffice) reservaVuelo.cancelarReserva(
-		 * LocalDateTime.now( clock ) ); reservasVueloWriteRepository.cancelReserva( reservaVuelo.getId() ); // 3. Obtenemos el
-		 * ID de formalización y notificamos al BackOffice // Nota: He usado la reserva que ya tenemos en memoria para evitar
-		 * otra consulta UUID idFormalizada = reservasVueloReadRepository.findIdFormalizadaByReservaById( command.getIdReserva()
-		 * ); reservasVueloWritePort.cancelarReservaVuelo( command.getDocumentoIdentidadTitular(), idFormalizada ); }, () -> {
-		 * // CASO: No existe la reserva throw new EntityNotFoundException( "No se encontró la reserva con ID: " +
-		 * command.getIdReserva() ); } );
-		 */
 	}
 
 }

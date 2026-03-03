@@ -15,7 +15,7 @@ public class ListarReservasQueryHandler implements QueryHandler<Page<ReservaVuel
 	}
 
 	@Override
-	public Page<ReservaVuelo> handle( ListarReservasQuery query ) throws Exception {
+	public Page<ReservaVuelo> handle( ListarReservasQuery query ) {
 		return reservasVueloReadRepository.findReservas( query.getDocumentoIdentidad(), query.getPagina(), query.getTamanioPagina() );
 	}
 

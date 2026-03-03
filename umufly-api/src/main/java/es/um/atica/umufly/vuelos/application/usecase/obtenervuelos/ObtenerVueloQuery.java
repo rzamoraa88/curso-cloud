@@ -1,13 +1,12 @@
 package es.um.atica.umufly.vuelos.application.usecase.obtenervuelos;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import es.um.atica.fundewebjs.umubus.domain.cqrs.Query;
 import es.um.atica.umufly.vuelos.application.dto.VueloAmpliadoDTO;
 import es.um.atica.umufly.vuelos.domain.model.DocumentoIdentidad;
 
-public class ObtenerVueloQuery extends Query<Optional<VueloAmpliadoDTO>> {
+public class ObtenerVueloQuery extends Query<VueloAmpliadoDTO> {
 
 	private DocumentoIdentidad documentoIdentidadPasajero;
 	private UUID idVuelo;

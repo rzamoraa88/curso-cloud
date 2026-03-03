@@ -36,14 +36,14 @@ public class ReservasCommandEndpointV2 {
 	}
 
 	@PostMapping( Constants.PRIVATE_PREFIX + Constants.API_VERSION_2 + Constants.RESOURCE_RESERVAS_VUELO )
-	public ReservaVueloDTO creaReserva( @RequestHeader( name = "UMU-Usuario", required = true ) String usuario, @RequestBody @Valid ReservaVueloDTO nuevaReservaVuelo ) throws Exception {
+	public ReservaVueloDTO creaReserva( @RequestHeader( name = "UMU-Usuario", required = true ) String usuario, @RequestBody @Valid ReservaVueloDTO nuevaReservaVuelo ) {
 		return reservasModelAssembler.toModel( crearReservaCommandHandler.handle( CrearReservaCommand.of( authService.parseUserHeader( usuario ), nuevaReservaVuelo.getVuelo().getId(),
 				ClaseAsientoReserva.valueOf( nuevaReservaVuelo.getClaseAsiento().toString() ), ApiRestV2Mapper.pasajeroToModel( nuevaReservaVuelo.getPasajero() ) ) ) );
 
 	}
 
 	@DeleteMapping( Constants.PRIVATE_PREFIX + Constants.API_VERSION_2 + Constants.RESOURCE_RESERVAS_VUELO + Constants.ID_RESERVA )
-	public ReservaVueloDTO cancelarReserva( @RequestHeader( name = "UMU-Usuario", required = true ) String usuario, @PathVariable( "idReserva" ) UUID idReserva ) throws Exception {
+	public ReservaVueloDTO cancelarReserva( @RequestHeader( name = "UMU-Usuario", required = true ) String usuario, @PathVariable( "idReserva" ) UUID idReserva ) {
 		return reservasModelAssembler.toModel( cancelarReservaCommandHandler.handle( CancelarReservaCommand.of( authService.parseUserHeader( usuario ), idReserva ) ) );
 	}
 
