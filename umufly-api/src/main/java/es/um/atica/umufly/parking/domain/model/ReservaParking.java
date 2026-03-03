@@ -3,10 +3,11 @@ package es.um.atica.umufly.parking.domain.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import es.um.atica.fundewebjs.umubus.domain.model.AggregateRoot;
 import es.um.atica.umufly.parking.domain.exception.CancelacionNoPermitidaException;
 import es.um.atica.umufly.parking.domain.exception.ReservaYaCanceladaException;
 
-public class ReservaParking {
+public class ReservaParking extends AggregateRoot {
 	private UUID id;
 	private DocumentoIdentidad identificadorPasajero;
 	private TipoReserva tipo;
