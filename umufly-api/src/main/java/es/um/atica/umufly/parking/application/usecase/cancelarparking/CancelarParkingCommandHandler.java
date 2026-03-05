@@ -8,9 +8,10 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import es.um.atica.fundewebjs.umubus.domain.cqrs.SyncCommandHandler;
+import es.um.atica.fundewebjs.umubus.domain.events.EventBus;
 import es.um.atica.umufly.parking.application.port.ReservasParkingReadRepository;
-import es.um.atica.umufly.parking.application.port.ReservasParkingWritePort;
 import es.um.atica.umufly.parking.application.port.ReservasParkingWriteRepository;
+import es.um.atica.umufly.parking.domain.event.CancelarParkingIntentEvent;
 import es.um.atica.umufly.parking.domain.model.ReservaParking;
 
 @Component
@@ -18,14 +19,14 @@ public class CancelarParkingCommandHandler implements SyncCommandHandler<Reserva
 
 	private final ReservasParkingReadRepository reservasParkingReadRepository;
 	private final ReservasParkingWriteRepository reservasParkingWriteRepository;
-	private final ReservasParkingWritePort reservasParkingWritePort;
 	private final Clock clock;
+	private EventBus eventBus;
 
-	public CancelarParkingCommandHandler( ReservasParkingReadRepository reservasparkingRepository, ReservasParkingWriteRepository reservasParkingWriteRepository, ReservasParkingWritePort reservasParkingWritePort, Clock clock ) {
+	public CancelarParkingCommandHandler( ReservasParkingReadRepository reservasparkingRepository, ReservasParkingWriteRepository reservasParkingWriteRepository, Clock clock, EventBus eventBus ) {
 		this.reservasParkingReadRepository = reservasparkingRepository;
 		this.reservasParkingWriteRepository = reservasParkingWriteRepository;
-		this.reservasParkingWritePort = reservasParkingWritePort;
 		this.clock = clock;
+		this.eventBus = eventBus;
 	}
 
 	@Override
@@ -40,9 +41,11 @@ public class CancelarParkingCommandHandler implements SyncCommandHandler<Reserva
 		if ( idReservaFormalizada == null ) {
 			throw new NoSuchElementException( "La reserva indicada no ha sido solicitada a traves de umufly, pongase en contacto con MUCHO VUELO" );
 		}
-		reservasParkingWritePort.cancelarParking( command.getDocumentoIdentidadTitular(), idReservaFormalizada );
+		// TODO: La cancelacion de la reserva en el backOffice hay que hacerla por eventos
+		// reservasParkingWritePort.cancelarParking( command.getDocumentoIdentidadTitular(), idReservaFormalizada );
+		eventBus.publish( CancelarParkingIntentEvent.of( command.getDocumentoIdentidadTitular(), idReservaFormalizada ) );
 
-		// 2. Cancelamos la reserva en el fronOffice
+		// 2. Cancelamos la reserva en el frontOffice
 		reservasParkingWriteRepository.cancelParking( reserva.getId() );
 
 		return reserva;

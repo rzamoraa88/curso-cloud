@@ -1,39 +1,30 @@
 package es.um.atica.umufly.parking.domain.event;
 
+import java.util.UUID;
+
 import es.um.atica.fundewebjs.umubus.domain.events.Event;
+import es.um.atica.umufly.parking.domain.model.DocumentoIdentidad;
 
 public class CancelarParkingIntentEvent extends Event {
 
-	private final String id;
-	private final String idReservaFormalizada;
-	private final String tipoIdentificadorCliente;
-	private final String numeroIdentificadorCliente;
+	private final DocumentoIdentidad documentoIdentidadTitular;
+	private final UUID idParking;
 
-	private CancelarParkingIntentEvent( String id, String idReservaFormalizada, String tipoIdentificadorCliente, String numeroIdentificadorCliente ) {
-		this.id = id;
-		this.idReservaFormalizada = idReservaFormalizada;
-		this.tipoIdentificadorCliente = tipoIdentificadorCliente;
-		this.numeroIdentificadorCliente = numeroIdentificadorCliente;
+	private CancelarParkingIntentEvent( DocumentoIdentidad documentoIdentidadTitular, UUID idParking ) {
+		this.documentoIdentidadTitular = documentoIdentidadTitular;
+		this.idParking = idParking;
 	}
 
-	public static CancelarParkingIntentEvent of( String id, String idReservaFormalizada, String tipoIdentificadorCliente, String numeroIdentificadorCliente ) {
-		return new CancelarParkingIntentEvent( id, idReservaFormalizada, tipoIdentificadorCliente, numeroIdentificadorCliente );
+	public static CancelarParkingIntentEvent of( DocumentoIdentidad documentoIdentidadTitular, UUID idParking ) {
+		return new CancelarParkingIntentEvent( documentoIdentidadTitular, idParking );
 	}
 
-	public String getId() {
-		return id;
+	public DocumentoIdentidad getDocumentoIdentidadTitular() {
+		return documentoIdentidadTitular;
 	}
 
-	public String getIdReservaFormalizada() {
-		return idReservaFormalizada;
-	}
-
-	public String getTipoIdentificadorCliente() {
-		return tipoIdentificadorCliente;
-	}
-
-	public String getNumeroIdentificadorCliente() {
-		return numeroIdentificadorCliente;
+	public UUID getIdParking() {
+		return idParking;
 	}
 
 }

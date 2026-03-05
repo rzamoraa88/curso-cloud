@@ -5,8 +5,11 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
+import es.um.atica.fundewebjs.umubus.domain.model.AggregateRoot;
+import es.um.atica.umufly.parking.domain.event.CancelarParkingIntentEvent;
+
 //Agregado raíz
-public class ReservaParking {
+public class ReservaParking extends AggregateRoot {
 
 	private UUID id;
 	private DocumentoIdentidad identificadorCliente;
@@ -119,6 +122,8 @@ public class ReservaParking {
 		if ( now.isAfter( getPeriodoEstacionamiento().inicio() )) {
 			throw new IllegalArgumentException( "La reserva no se puede cancelar porque ya se ha iniciado el periodo de reserva" );
 		}
+		// TODO: Lanzar evento
+		this.addEvent( CancelarParkingIntentEvent.of( this.getIdentificadorCliente(), this.getId() ) );
 		estado = EstadoParking.CANCELADA;
 	}
 }
