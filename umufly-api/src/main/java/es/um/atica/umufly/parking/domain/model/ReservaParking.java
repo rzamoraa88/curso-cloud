@@ -5,8 +5,10 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
+import es.um.atica.fundewebjs.umubus.domain.model.AggregateRoot;
+
 //Agregado raíz
-public class ReservaParking {
+public class ReservaParking extends AggregateRoot {
 
 	private UUID id;
 	private DocumentoIdentidad identificadorCliente;

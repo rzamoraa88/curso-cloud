@@ -1,12 +1,13 @@
-package es.um.atica.umufly.parking.application.usecase.cancelarparking;
+package es.um.atica.umufly.parking.application.usecase.cancelarparking.v1;
 
 
 import java.util.UUID;
 
-import es.um.atica.fundewebjs.umubus.domain.cqrs.Command;
+import es.um.atica.fundewebjs.umubus.domain.cqrs.SyncCommand;
 import es.um.atica.umufly.parking.domain.model.DocumentoIdentidad;
+import es.um.atica.umufly.parking.domain.model.ReservaParking;
 
-public class CancelarParkingCommand extends Command {
+public class CancelarParkingCommand extends SyncCommand<ReservaParking> {
 
 	private final DocumentoIdentidad documentoIdentidadTitular;
 	private final UUID idParking;
