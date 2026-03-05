@@ -2,22 +2,17 @@ package es.um.atica.umufly.parking.application.port;
 
 import java.util.UUID;
 
+import es.um.atica.umufly.parking.domain.model.Estacionamiento;
+import es.um.atica.umufly.parking.domain.model.Importe;
 import es.um.atica.umufly.parking.domain.model.ReservaParking;
 
 public interface ReservasParkingWriteRepository {
 
-	/**
-	 * M�todo que persiste una reserva de vuelo.
-	 *
-	 * @param reservaParking
-	 */
-	void persistirReserva( ReservaParking reservaParking );
+	void persistirParking( ReservaParking reservaParking );
 
-	/**
-	 * Metodo que cancela una reserva a traves de su id.
-	 *
-	 * @param idReserva
-	 * @return
-	 */
-	void cancelReserva( UUID idReserva );
+	void persistirFormalizacionParking( UUID idParking, UUID idParkingFormalizada );
+
+	void cancelParking( UUID idParking );
+
+	void actualizarImporteParking( UUID id, Estacionamiento estacionamiento, Importe importe );
 }

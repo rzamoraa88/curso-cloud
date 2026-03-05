@@ -6,11 +6,11 @@ public record Periodo( LocalDateTime inicio, LocalDateTime fin ) {
 
 	public Periodo {
 		if ( inicio == null || fin == null ) {
-			throw new IllegalArgumentException( "Es obligatorio indicar el inicio y fin del periodo de la duración de la reserva" );
+			throw new IllegalArgumentException( "Es obligatorio indicar el inicio y fin de la estancia" );
 		}
 
 		if ( inicio.isAfter( fin ) ) {
-			throw new IllegalAccessError( "El inicio del periodo de la duración de la reserva no puede ser posterior al fin" );
+			throw new IllegalAccessError( "La salida no puede ser posterior a la llegada" );
 		}
 	}
 

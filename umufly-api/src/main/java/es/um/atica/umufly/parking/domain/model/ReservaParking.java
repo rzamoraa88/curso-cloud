@@ -1,71 +1,65 @@
 package es.um.atica.umufly.parking.domain.model;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
-import es.um.atica.fundewebjs.umubus.domain.model.AggregateRoot;
-import es.um.atica.umufly.parking.domain.exception.CancelacionNoPermitidaException;
-import es.um.atica.umufly.parking.domain.exception.ReservaYaCanceladaException;
+//Agregado raíz
+public class ReservaParking {
 
-public class ReservaParking extends AggregateRoot {
 	private UUID id;
-	private DocumentoIdentidad identificadorPasajero;
-	private TipoReserva tipo;
-	private Periodo periodo;
+	private DocumentoIdentidad identificadorCliente;
+	private Estacionamiento estacionamiento;
+	private Periodo periodoEstacionamiento;
 	private Importe importe;
 	private LocalDateTime fechaReserva;
-	private EstadoReserva estado;
+	private EstadoParking estado;
 
-	private ReservaParking( UUID id, DocumentoIdentidad identificadorPasajero, TipoReserva tipo, Periodo periodo, Importe importe, LocalDateTime fechaReserva, EstadoReserva estado ) {
+	private ReservaParking( UUID id, DocumentoIdentidad identificadorCliente, Estacionamiento estacionamiento, Periodo periodoEstacionamiento, Importe importe, LocalDateTime fechaReserva, EstadoParking estado ) {
 		this.id = id;
-		this.identificadorPasajero = identificadorPasajero;
-		this.tipo = tipo;
-		this.periodo = periodo;
+		this.identificadorCliente = identificadorCliente;
+		this.estacionamiento = estacionamiento;
+		this.periodoEstacionamiento = periodoEstacionamiento;
 		this.importe = importe;
 		this.fechaReserva = fechaReserva;
 		this.estado = estado;
 	}
 
-	public static ReservaParking of(UUID id, DocumentoIdentidad identificadorPasajero, TipoReserva tipo, Periodo periodo, Importe importe, LocalDateTime fechaReserva, EstadoReserva estado) {
+	public static ReservaParking of( UUID id, DocumentoIdentidad identificadorCliente, Estacionamiento estacionamiento, Periodo periodoEstacionamiento, Importe importe, LocalDateTime fechaReserva, EstadoParking estado ) {
 		if ( id == null ) {
 			throw new IllegalArgumentException( "El id de la reserva no puede ser nulo" );
 		}
-		if ( identificadorPasajero == null ) {
-			throw new IllegalArgumentException( "El titular de la reserva no puede ser nulo" );
+		if ( identificadorCliente == null ) {
+			throw new IllegalArgumentException( "El cliente de la reserva no puede ser nulo" );
 		}
-		if ( tipo == null ) {
-			throw new IllegalArgumentException( "El tipo de la reserva no puede ser nulo" );
+		if ( estacionamiento == null ) {
+			throw new IllegalArgumentException( "El estacionamiento de la reserva no puede ser nulo" );
 		}
-		if ( periodo == null ) {
-			throw new IllegalArgumentException( "El periodo de la reserva no puede ser nulo" );
-		}
-		if ( importe == null ) {
-			throw new IllegalArgumentException( "El importe de la reserva no puede ser nulo" );
-		}
-		if ( fechaReserva == null ) {
-			throw new IllegalArgumentException( "La fecha de la reserva no puede ser nula" );
+		if ( periodoEstacionamiento == null ) {
+			throw new IllegalArgumentException( "El periodo de estacionamiento de la reserva no puede ser nulo" );
 		}
 		if ( estado == null ) {
 			throw new IllegalArgumentException( "El estado de la reserva no puede ser nulo" );
 		}
 
-		return new ReservaParking( id, identificadorPasajero, tipo, periodo, importe, fechaReserva, estado );
+		return new ReservaParking( id, identificadorCliente, estacionamiento, periodoEstacionamiento, importe, fechaReserva, estado );
 	}
 
 	public UUID getId() {
 		return id;
 	}
 
-	public DocumentoIdentidad getIdentificadorPasajero() {
-		return identificadorPasajero;
+	public DocumentoIdentidad getIdentificadorCliente() {
+		return identificadorCliente;
 	}
 
-	public TipoReserva getTipo() {
-		return tipo;
+	public Estacionamiento getEstacionamiento() {
+		return estacionamiento;
 	}
 
-	public Periodo getPeriodo() {
-		return periodo;
+	public Periodo getPeriodoEstacionamiento() {
+		return periodoEstacionamiento;
 	}
 
 	public Importe getImporte() {
@@ -76,45 +70,55 @@ public class ReservaParking extends AggregateRoot {
 		return fechaReserva;
 	}
 
-	public EstadoReserva getEstado() {
+	public EstadoParking getEstado() {
 		return estado;
 	}
 
-	// Acciones sobre la reserva
-	/**
-	 * Método para crear una reserva de parking
-	 * @param identificadorPasajero
-	 * @param tipo
-	 * @param periodo
-	 * @param importe
-	 * @param fechaReserva
-	 * @param tieneReservaVuelo
-	 * @param vueloIniciado
-	 * @return
-	 */
-	public static ReservaParking solicitarReserva( DocumentoIdentidad identificadorPasajero, TipoReserva tipo, Periodo periodo, Importe importe, LocalDateTime fechaReserva, boolean tieneReservaVuelo, boolean vueloIniciado ) {
-		if ( tieneReservaVuelo && !vueloIniciado ) {
-			importe = new Importe( importe.valor() * 0.75  );
+	public static ReservaParking solicitarParking( DocumentoIdentidad identificadorPasajero, Periodo periodoEstacionamiento, LocalDateTime fechaReserva ) {
+		if ( periodoEstacionamiento.inicio().isBefore( fechaReserva ) ) {
+			throw new IllegalArgumentException( "No se puede realizar una reserva para un periodo anterior a la fecha actual" );
 		}
-		return of(UUID.randomUUID(), identificadorPasajero, tipo, periodo, importe, fechaReserva, EstadoReserva.ACTIVA);
+		// Estacionamiento estacionamiento = crearEstacionamiento( periodoEstacionamiento );
+		// Importe importe = new Importe( calcularImporte( identificadorPasajero, estacionamiento, periodoEstacionamiento ) );
+		return of( UUID.randomUUID(), identificadorPasajero, null, periodoEstacionamiento, null, fechaReserva, EstadoParking.PENDIENTE );
 	}
 
-	/**
-	 * Método para cancelar una reserva de parking. Las restricciones que se aplicaran para cancelar una reserva de vuelo son
-	 * las siguientes:
-	 * <ol>
-	 * <li>Solo se puede cancelar una reserva que se encuentre activa.</li>
-	 * <li>No se puede cancelar una reserva despues de que inicie el periodo de estacionamiento.</li>
-	 * </ol>
-	 * @param now
-	 */
-	public void cancelarReserva( LocalDateTime now ) {
-		if (this.estado == EstadoReserva.CANCELADA) {
-			throw new ReservaYaCanceladaException("La reserva con id: " + this.getId().toString() + " ya está cancelada");
+	public void crearEstacionamiento( Periodo periodoEstacionamiento ) {
+		long dias = ChronoUnit.DAYS.between( periodoEstacionamiento.inicio(), periodoEstacionamiento.fin() );
+		// TODO: Es correcto obtener asi el precio del estacionamiento? La idea es que esta información la coja de la vista
+		// VWEXT_TIPO_ESTACIONAMIENTO a traves de un evento.
+		if ( dias == 0 ) {
+			this.estacionamiento = new Estacionamiento( TipoEstacionamiento.CORTA_DURACION, 0.02 );
+		} else {
+			this.estacionamiento = new Estacionamiento( TipoEstacionamiento.LARGA_DURACION, 7.0 );
 		}
-		if ( now.isAfter( periodo.inicio() ) ) {
-			throw new CancelacionNoPermitidaException( "Puede cancelar antes del inicio del periodo de estacionamiento" );
+	}
+
+	public void calcularImporte( DocumentoIdentidad identificadorPasajero, Estacionamiento estacionamiento, Periodo periodoEstacionamiento ) {
+		double valor = 0;
+		if ( TipoEstacionamiento.CORTA_DURACION.equals( estacionamiento.tipo() ) ) {
+			Duration duration  = Duration.between( periodoEstacionamiento.inicio(), periodoEstacionamiento.fin() );
+			long minutos = duration.toMinutes();
+			valor = minutos * estacionamiento.valor();
+		}else {
+			long dias = ChronoUnit.DAYS.between( periodoEstacionamiento.inicio(), periodoEstacionamiento.fin() );
+			valor = dias * estacionamiento.valor();
 		}
-		this.estado = EstadoReserva.CANCELADA;
+		// TODO: Como obtenemos si el que solicita el parking es un pasajero de algun vuelo para aplicarle el 75%?
+		// if() {
+		// valor = valor * 0.75;
+		// }
+		this.importe = new Importe( valor );
+	}
+
+	public void formalizarParking() {
+		estado = EstadoParking.ACTIVA;
+	}
+
+	public void cancelarParking(LocalDateTime now) {
+		if ( now.isAfter( getPeriodoEstacionamiento().inicio() )) {
+			throw new IllegalArgumentException( "La reserva no se puede cancelar porque ya se ha iniciado el periodo de reserva" );
+		}
+		estado = EstadoParking.CANCELADA;
 	}
 }
