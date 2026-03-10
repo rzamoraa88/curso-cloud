@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Component;
 
 import es.um.atica.fundewebjs.umubus.domain.cqrs.QueryHandler;
 import es.um.atica.umufly.vuelos.application.dto.VueloAmpliadoDTO;
@@ -13,6 +14,7 @@ import es.um.atica.umufly.vuelos.application.port.ReservasVueloReadRepository;
 import es.um.atica.umufly.vuelos.application.port.VuelosReadRepository;
 import es.um.atica.umufly.vuelos.domain.model.Vuelo;
 
+@Component
 public class ListarVuelosQueryHandler implements QueryHandler<Page<VueloAmpliadoDTO>,ListarVuelosQuery> {
 	private final VuelosReadRepository vuelosReadRepository;
 	private final ReservasVueloReadRepository reservasVueloReadRepository;

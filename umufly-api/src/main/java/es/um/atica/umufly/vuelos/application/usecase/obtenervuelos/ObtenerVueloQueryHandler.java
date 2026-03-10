@@ -2,6 +2,8 @@ package es.um.atica.umufly.vuelos.application.usecase.obtenervuelos;
 
 import java.util.UUID;
 
+import org.springframework.stereotype.Component;
+
 import es.um.atica.fundewebjs.umubus.domain.cqrs.QueryHandler;
 import es.um.atica.umufly.vuelos.application.dto.VueloAmpliadoDTO;
 import es.um.atica.umufly.vuelos.application.mapper.ApplicationMapper;
@@ -9,6 +11,7 @@ import es.um.atica.umufly.vuelos.application.port.ReservasVueloReadRepository;
 import es.um.atica.umufly.vuelos.application.port.VuelosReadRepository;
 import es.um.atica.umufly.vuelos.domain.model.Vuelo;
 
+@Component
 public class ObtenerVueloQueryHandler implements QueryHandler<VueloAmpliadoDTO, ObtenerVueloQuery> {
 	private final VuelosReadRepository vuelosReadRepository;
 	private final ReservasVueloReadRepository reservasVueloReadRepository;

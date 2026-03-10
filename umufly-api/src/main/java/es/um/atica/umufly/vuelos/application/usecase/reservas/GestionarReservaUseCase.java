@@ -7,8 +7,8 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
-import es.um.atica.umufly.vuelos.application.port.FormalizacionReservasVueloPort;
 import es.um.atica.umufly.vuelos.application.port.ReservasVueloRepository;
+import es.um.atica.umufly.vuelos.application.port.ReservasVueloWritePort;
 import es.um.atica.umufly.vuelos.application.port.VuelosRepository;
 import es.um.atica.umufly.vuelos.domain.model.ClaseAsientoReserva;
 import es.um.atica.umufly.vuelos.domain.model.DocumentoIdentidad;
@@ -21,13 +21,14 @@ public class GestionarReservaUseCase {
 
 	private final VuelosRepository vuelosRepository;
 	private final ReservasVueloRepository reservasVueloRepository;
-	private final FormalizacionReservasVueloPort formalizacionReservasVueloPort;
+	// private final FormalizacionReservasVueloPort formalizacionReservasVueloPort;
+	private final ReservasVueloWritePort reservasVueloWritePort;
 	private final Clock clock;
 
-	public GestionarReservaUseCase( VuelosRepository vuelosRepository, ReservasVueloRepository reservasVueloRepository, FormalizacionReservasVueloPort formalizacionReservasVueloPort, Clock clock ) {
+	public GestionarReservaUseCase( VuelosRepository vuelosRepository, ReservasVueloRepository reservasVueloRepository, ReservasVueloWritePort reservasVueloWritePort, Clock clock ) {
 		this.vuelosRepository = vuelosRepository;
 		this.reservasVueloRepository = reservasVueloRepository;
-		this.formalizacionReservasVueloPort = formalizacionReservasVueloPort;
+		this.reservasVueloWritePort = reservasVueloWritePort;
 		this.clock = clock;
 	}
 
@@ -47,7 +48,8 @@ public class GestionarReservaUseCase {
 		reservasVueloRepository.persistirReserva( reservaVuelo );
 
 		// 5. Formalizamos la reserva llamando al backoffice para que se haga eco de la nueva reserva que acabamos de crear
-		UUID idReservaFormalizada = formalizacionReservasVueloPort.formalizarReservaVuelo( reservaVuelo );
+		// UUID idReservaFormalizada = formalizacionReservasVueloPort.formalizarReservaVuelo( reservaVuelo );
+		UUID idReservaFormalizada = reservasVueloWritePort.formalizarReservaVuelo( reservaVuelo );
 		reservaVuelo.formalizarReserva();
 		reservasVueloRepository.persistirFormalizacionReserva( reservaVuelo.getId(), idReservaFormalizada );
 
@@ -65,8 +67,8 @@ public class GestionarReservaUseCase {
 
 		// 3. Cancelamos la reserva llamando al backoffice para que se haga eco de la cancelacion
 		UUID idReservaFormalizada = reservasVueloRepository.findIdFormalizadaByReservaById( idReserva );
-		formalizacionReservasVueloPort.cancelarReservaVuelo( documentoIdentidadTitular, idReservaFormalizada );
-
+		// formalizacionReservasVueloPort.cancelarReservaVuelo( documentoIdentidadTitular, idReservaFormalizada );
+		reservasVueloWritePort.cancelarReservaVuelo( documentoIdentidadTitular, idReservaFormalizada );
 
 		return reservaVuelo;
 	}
