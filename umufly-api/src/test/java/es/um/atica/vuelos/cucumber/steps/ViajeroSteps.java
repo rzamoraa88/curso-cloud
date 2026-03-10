@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
 
 import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.dto.ReservaVueloDTO;
 import es.um.atica.umufly.vuelos.adaptors.api.rest.v2.dto.VueloDTO;
@@ -19,7 +20,7 @@ public class ViajeroSteps {
 	private WebTestClient webTestClient;
 	private String port;
 
-	private response;
+	private ResponseSpec response;
 	@Dado( "un viajero con NIF {string}" )
 	public void cargo_datos_usuario( String nif ) {
 		this.usuario = nif;
@@ -34,7 +35,23 @@ public class ViajeroSteps {
 		response = webTestClient.get().uri( uriBuilder -> uriBuilder.path( "/private/v2.0/vuelos" ).queryParam( "page", page ).queryParam( "size", size ).build() ).header( "UMU-Usuario", "NIF:" + usuario ).accept( MediaType.APPLICATION_JSON ).exchange();
 		// Guardo los vuelos en una variable para usarla en otros casos
 		VuelosWrapper vuelosLista = response.expectBody( VuelosWrapper.class ).returnResult().getResponseBody();
-		vuelos = vuelosLista.getVuelos();
+		setVuelos( vuelosLista.getVuelos() );
+	}
+
+	public List<VueloDTO> getVuelos() {
+		return vuelos;
+	}
+
+	public void setVuelos( List<VueloDTO> vuelos ) {
+		this.vuelos = vuelos;
+	}
+
+	public ReservaVueloDTO getReserva() {
+		return reserva;
+	}
+
+	public void setReserva( ReservaVueloDTO reserva ) {
+		this.reserva = reserva;
 	}
 
 }
